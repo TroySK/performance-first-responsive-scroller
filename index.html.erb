@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Product Scroller">
+    <meta name="author" content="@troysk">
+    <title>Scroller Demo</title>
+    <style>
+      .scroller {
+        display: flex;
+        align-items: center;
+      }
+      .scroller .left, .scroller .right {
+        width: 1rem;
+        text-decoration: none;
+        font-size: 5rem;
+        color: #ccc;
+      }
+      .scroller-inner {
+        flex-grow: 1;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: hidden;
+      }
+      .scroller-item {
+        width: calc(100% - 2rem);
+        height: 300px;
+        background: #ccc;
+        flex-shrink: 0;
+        margin: 1rem;
+        /* customize */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 5rem;
+        transition: all 0.5s cubic-bezier(.36,-0.64,.34,1.76);
+      }
+      @media (min-width: 481px) and (max-width: 640px) {
+        .scroller-item {
+          width: calc(50% - 2rem);
+        }
+      }
+      @media (min-width: 641px) and (max-width: 960px) {
+        .scroller-item {
+          width: calc(33% - 2rem);
+        }
+      }
+      @media (min-width: 961px) and (max-width: 1200px) {
+        .scroller-item {
+          width: calc(25% - 2rem);
+        }
+      }
+      @media (min-width: 1201px) {
+        .scroller-item {
+          width: calc(16.67% - 2rem);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="scroller" data-scroll="0">
+      <a href="#" class="left">	&lsaquo;</a>
+      <div class="scroller-inner">
+        <div class="scroller-item">1</div>
+        <div class="scroller-item">2</div>
+        <div class="scroller-item">3</div>
+        <div class="scroller-item">4</div>
+        <div class="scroller-item">5</div>
+        <div class="scroller-item">6</div>
+        <div class="scroller-item">7</div>
+        <div class="scroller-item">8</div>
+        <div class="scroller-item">9</div>
+        <div class="scroller-item">10</div>
+        <div class="scroller-item">11</div>
+        <div class="scroller-item">12</div>
+        <div class="scroller-item">13</div>
+        <div class="scroller-item">14</div>
+        <div class="scroller-item">15</div>
+        <div class="scroller-item">16</div>
+      </div>
+      <a href="#" class="right">&rsaquo;</a>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".scroller").forEach(function(scroller) {
+          scroller.addEventListener("click", function(e) {
+            if (e.target && e.target.matches("a.left, a.right")) {
+              e.preventDefault();
+              var itemsContainer, direction;
+              if (e.target.matches("a.left")) {
+                itemsContainer = e.target.nextElementSibling;
+                direction = -1;
+              } else {
+                itemsContainer = e.target.previousElementSibling;
+                direction = 1;
+              }
+              var slides = [].slice.call(itemsContainer.children);
+              [].unshift.apply(slides, slides.splice(direction, slides.length));
+              itemsContainer.innerHTML = slides.reduce(function(a, b) { return a + b.outerHTML }, '');
+            }
+          });
+          if (parseInt(scroller.getAttribute("data-scroll")) > 0) {
+            setInterval(function(){
+              var event = document.createEvent("HTMLEvents");
+              event.initEvent("click", true, false);
+              scroller.querySelectorAll("a.right")[0].dispatchEvent(event);
+            }, parseInt(scroller.getAttribute("data-scroll")));
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
